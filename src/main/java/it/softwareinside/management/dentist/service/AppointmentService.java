@@ -66,6 +66,13 @@ public class AppointmentService {
 	 */
 	@SuppressWarnings("deprecation")
 	public boolean addAppointment(Appointment appointment) {
+			
+		if(appointment.getDate().getDay()==6||appointment.getDate().getDay()==0)
+		    return false;
+		
+		if(appointment.getDate().getHours()-2==13)
+			return false;
+			
 		if(appointment.getDate().getHours()-2<9||appointment.getDate().getHours()-2>=18)
 			return false;
 
