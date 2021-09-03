@@ -19,9 +19,9 @@ public class AppointmentService {
 
 	@Autowired
 	private CustomerService customerService;
-	
+
 	@Autowired
-    private JavaMailSender emailSender;
+	private JavaMailSender emailSender;
 
 	/**
 	 * return full list of appointment
@@ -55,7 +55,7 @@ public class AppointmentService {
 				listByDate.add(appointmentRepository.findAll().get(i));
 			}
 		}
-		
+
 		return listByDate;
 	}
 
@@ -66,13 +66,13 @@ public class AppointmentService {
 	 */
 	@SuppressWarnings("deprecation")
 	public boolean addAppointment(Appointment appointment) {
-			
+
 		if(appointment.getDate().getDay()==6||appointment.getDate().getDay()==0)
-		    return false;
-		
+			return false;
+
 		if(appointment.getDate().getHours()-2==13)
 			return false;
-			
+
 		if(appointment.getDate().getHours()-2<9||appointment.getDate().getHours()-2>=18)
 			return false;
 
@@ -84,9 +84,9 @@ public class AppointmentService {
 				return false;
 		customerService.editCustomer(appointment.getCustomer().getCf(),appointment.getCustomer());
 		appointmentRepository.save(appointment);
-		
+
 		String minutes=appointment.getDate().getMinutes()+"";
-		
+
 		SimpleMailMessage message = new SimpleMailMessage(); 
 		message.setFrom("noreply@baeldung.com");
 		message.setTo(appointment.getCustomer().getEmail()); 
@@ -95,14 +95,27 @@ public class AppointmentService {
 			minutes+="0";
 		}
 		message.setText("E' stato fissato un appuntamento presso lo studio dentistico Piscopo per il giorno: "
-		+ ""+(appointment.getDate().getDate())+"/"+(appointment.getDate().getMonth()+1)+
-		"/"+(appointment.getDate().getYear()+1900)+" alle ore: "+(appointment.getDate().getHours()-2)+
-		":"+minutes);
+				+ ""+(appointment.getDate().getDate())+"/"+(appointment.getDate().getMonth()+1)+
+				"/"+(appointment.getDate().getYear()+1900)+" alle ore: "+(appointment.getDate().getHours()-2)+
+				":"+minutes);
 		emailSender.send(message);
 		return true;
 	}
 
+	@SuppressWarnings("deprecation")
 	public Appointment editAppointment(long id,Appointment newAppointment) {
+		if(newAppointment.getDate().getDay()==6 && newAppointment.getDate().getDay()==0)
+			return null;
+
+		if(newAppointment.getDate().getHours()-2==13)
+			return  null;
+
+		if(newAppointment.getDate().getHours()-2<9 && newAppointment.getDate().getHours()-2>=18)
+			return null;
+
+		if(newAppointment.getDate().getMinutes()!=0 && newAppointment.getDate().getMinutes()!=30)
+			return null;
+
 		for (int i = 0; i<appointmentRepository.findAll().size(); i++) {
 			if(appointmentRepository.findAll().get(i).getId()==id) {
 				if(this.addAppointment(newAppointment)) {
