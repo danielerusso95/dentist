@@ -44,15 +44,16 @@ public class CustomerService {
 		return true;
 	}
 
-	public Customer editCustomer(String cf,Customer newCustomer) {
+	public boolean editCustomer(String cf,Customer newCustomer) {
 			Customer customer = customerRepository.findById(cf).get();
 			customer.setCf(newCustomer.getCf());
 	        customer.setName(newCustomer.getName());
 	        customer.setSurname(newCustomer.getSurname());
 	        customer.setEmail(newCustomer.getEmail());
 	        customer.setPhoneNumber(newCustomer.getPhoneNumber());
+	        customer.setDob(newCustomer.getDob());
 	        customerRepository.save(customer);
-	        return customer;
+	        return true;
 	}
 
 	public boolean deleteCustomer(String cf) {

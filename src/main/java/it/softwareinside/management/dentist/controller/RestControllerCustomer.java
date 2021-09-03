@@ -3,6 +3,7 @@ package it.softwareinside.management.dentist.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ import it.softwareinside.management.dentist.service.CustomerService;
 
 @org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/customer")
+@CrossOrigin
 public class RestControllerCustomer {
 
 	@Autowired
@@ -48,7 +50,7 @@ public class RestControllerCustomer {
     }
 	
 	@PutMapping(value="/edit/{cf}")
-	public Customer editCustomer(@PathVariable() String cf,@RequestBody() Customer customer) {
+	public boolean editCustomer(@PathVariable() String cf,@RequestBody() Customer customer) {
 		return customerService.editCustomer(cf, customer);
 	}
 	
